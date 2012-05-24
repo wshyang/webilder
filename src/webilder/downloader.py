@@ -79,7 +79,10 @@ def filter_photos(config_obj, photos):
             print _("Skipping previously filtered photo '%s'.") % photo['title']
             continue
 
-        photo['_plugin']['module'].fetch_photo_info(config_obj, photo)
+        try:
+            photo['_plugin']['module'].fetch_photo_info(config_obj, photo)
+        except:
+            continue;
         if config_obj.get('filter.only_landscape'):
             if ('aspect_ratio' in photo['data'] and
                 photo['data']['aspect_ratio'] < 1.1):
@@ -166,6 +169,8 @@ def download_all(notify=lambda *args: None, terminate=lambda: False):
         except LeechPremiumOnlyPhotoError:
             print _("   Photo is available only to premium members. Skipping.")
             continue # skip this photo (goes back to for)
+        except:
+            continue
 
         if terminate():
             break
